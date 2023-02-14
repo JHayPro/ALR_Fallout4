@@ -1,21 +1,11 @@
 #pragma once
 #include "pch.h"
-#include "UI.cpp"
+#include "cmd.cpp"
 #include "PathData.h"
 
 class PathBuilderParent {
 public:
 
-	virtual void findInputFiles() = 0,
-		generateInputPaths() = 0,
-		correctFiles() = 0,
-		generateOutputPaths() = 0,
-		findDLLPath() = 0,
-		firstTimeCheck() = 0,
-		readIni() = 0;
-
-	virtual bool verifyDataFiles() = 0, 
-		buildTextureDir() = 0;
 };
 
 class PathBuilder : public PathBuilderParent {
@@ -23,27 +13,27 @@ class PathBuilder : public PathBuilderParent {
 private:
 	PathDataParent* pathData = NULL;
 	vector<string> inputFiles;
-	string inputPath, overlayPath, outputPath;
-	ostringstream pathSS;
-	HRESULT hr;
+	string inputPath, overlayPath, outputPath, backgroundPath, prefPath;
+	ostringstream dataPathSS, prefPathSS;
 
-	void readIni(),
+	void readInis(),
 		findInputFiles(),
 		generateInputPaths(),
 		correctFiles(),
 		generateOutputPaths(),
 		firstTimeCheck(),
 		findDLLPath(),
+		findPrefPath(),
 		rebuildIni(),
-		verifyImgFiles(),
-		verifyOvLFiles(),
-		findImgDir();
+		verifyFiles(),
+		findImgDir(),
+		HFPSPFpatch();
 
-	bool verifyDataFiles(),
-		buildTextureDir(),
-		verifyImages(),
-		verifyOverlay(),
+	void buildTextureDir();
 
+	bool verifyImages(),
+		HFPSPFsearch,
+		HFPSPFapplied,
 		dImageRD,
 		dOverlayRD,
 		rebuildIniFlag;
@@ -51,4 +41,5 @@ private:
 public:
 
 	PathBuilder(PathDataParent& _pathData);
+	~PathBuilder();
 };

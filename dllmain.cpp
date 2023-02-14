@@ -12,17 +12,17 @@ __declspec(dllexport) PathDataParent* PathDataCreate()
 {
 	return new PathData();
 }
-__declspec(dllexport) PathBuilderParent* PathBuilderCreate(PathDataParent& PathData)
+__declspec(dllexport) PathBuilderParent* PathBuilderCreate(PathDataParent& _pathData)
 {
-	return new PathBuilder(PathData);
+	return new PathBuilder(_pathData);
 }
-__declspec(dllexport) PathDestoryerParent* PathDestoryerCreate(PathDataParent& PathData)
+__declspec(dllexport) PathDestoryerParent* PathDestoryerCreate(PathDataParent& _pathData)
 {
-	return new PathDestoryer(PathData);
+	return new PathDestoryer(_pathData);
 }
-__declspec(dllexport) ImageConvertParent* ImageConvertCreate(PathDataParent& PathData)
+__declspec(dllexport) ImageConvertParent* ImageConvertCreate(PathDataParent& _pathData)
 {
-	return new ImageConvert(PathData);
+	return new ImageConvert(_pathData);
 }
 PathDataParent* pathData = PathDataCreate();
 
@@ -95,8 +95,10 @@ BOOL WINAPI DllMain(
 
 		PathDestoryerParent* PDinst = PathDestoryerCreate(*pathData);
 		delete PDinst;
+		delete &pathData;
 		// Perform any necessary cleanup.
 		break;
 	}
+
 	return TRUE;  // Successful DLL_PROCESS_ATTACH.
 }

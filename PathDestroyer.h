@@ -1,19 +1,19 @@
 #pragma once
 #include "pch.h"
-#include "UI.cpp"
+#include "cmd.cpp"
 #include "pathData.h"
 
 class PathDestoryerParent {
 public:
-	virtual void deleteFiles() = 0,
-		deleteEmptyFolders()  = 0;
+
 };
 
 class PathDestoryer : public PathDestoryerParent {
 
 private:
-	string overlayPath, ALRDirPath;
+	string overlayPath, ALRDirPath, backgroundPath;
 	HRESULT hr;
+	bool backgroundReplace;
 
 public:
 	PathDestoryer(PathDataParent& _pathData);

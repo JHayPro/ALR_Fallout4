@@ -11,8 +11,10 @@ PathDestoryer::PathDestoryer(PathDataParent& _pathData)
 	in.ignore((numeric_limits<streamsize>::max)(), ':');
 
 	if (in.get() == '0') {
-		overlayPath = string(_pathData.overlayPath.begin(), _pathData.overlayPath.end());
-		ALRDirPath = string(_pathData.outputPaths.at(0).begin(), _pathData.outputPaths.at(0).end() - 6);
+		overlayPath = _pathData.overlayPath;
+		backgroundPath = _pathData.backgroundPath;
+		ALRDirPath = path::getDirectoryFromBegin(_pathData.outputPaths.at(0), 6);
+		backgroundReplace = _pathData.backgroundReplace;
 
 		deleteFiles();
 		deleteEmptyFolders();
@@ -21,43 +23,40 @@ PathDestoryer::PathDestoryer(PathDataParent& _pathData)
 
 void PathDestoryer::deleteFiles()
 {
-	hr = filesystem::remove_all(ALRDirPath);
-	if (FAILED(hr)) message::displayCOMErrorMessage(hr);
+	message::checkForError(filesystem::remove_all(ALRDirPath));
+	message::checkForError(filesystem::remove(overlayPath));
 
-	hr = filesystem::remove(overlayPath);
-	if (FAILED(hr)) message::displayCOMErrorMessage(hr);
+	if(backgroundReplace)
+		message::checkForError(filesystem::remove(backgroundPath));
 }
 
 void PathDestoryer::deleteEmptyFolders()
 {
-	string overlayDirPath = overlayPath.substr(0, overlayPath.size() - 16);
-	for (auto& i : filesystem::directory_iterator(overlayDirPath)) {
-		if (i.exists())
+	string overlayDirPath = path::getDirectoryFromBegin(overlayPath, 16);
+	for (auto& dir : filesystem::directory_iterator(overlayDirPath)) {
+		if (dir.exists())
 			return;
 	}
-	hr = filesystem::remove(overlayDirPath);
-	if (FAILED(hr)) message::displayCOMErrorMessage(hr);
+	message::checkForError(filesystem::remove(overlayDirPath));
 
-	overlayDirPath = overlayPath.substr(0, overlayPath.size() - 27);
-	for (auto& i : filesystem::directory_iterator(overlayDirPath)) {
-		if (i.exists())
+	overlayDirPath = path::getDirectoryFromBegin(overlayPath, 27);
+	for (auto& dir : filesystem::directory_iterator(overlayDirPath)) {
+		if (dir.exists())
 			return;
 	}
-	hr = filesystem::remove(overlayDirPath);
-	if (FAILED(hr)) message::displayCOMErrorMessage(hr);
+	message::checkForError(filesystem::remove(overlayDirPath));
 
-	overlayDirPath = overlayPath.substr(0, overlayPath.size() - 35);
-	for (auto& i : filesystem::directory_iterator(overlayDirPath)) {
-		if (i.exists())
+	overlayDirPath = path::getDirectoryFromBegin(overlayPath, 35);
+	for (auto& dir : filesystem::directory_iterator(overlayDirPath)) {
+		if (dir.exists())
 			return;
 	}
-	hr = filesystem::remove(overlayDirPath);
+	message::checkForError(filesystem::remove(overlayDirPath));
 
-	overlayDirPath = overlayPath.substr(0, overlayPath.size() - 45);
-	for (auto& i : filesystem::directory_iterator(overlayDirPath)) {
-		if (i.exists())
+	overlayDirPath = path::getDirectoryFromBegin(overlayPath, 45);
+	for (auto& dir : filesystem::directory_iterator(overlayDirPath)) {
+		if (dir.exists())
 			return;
 	}
-	hr = filesystem::remove(overlayDirPath);
-	if (FAILED(hr)) message::displayCOMErrorMessage(hr);
+	message::checkForError(filesystem::remove(overlayDirPath));
 }

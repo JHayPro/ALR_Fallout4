@@ -26,6 +26,7 @@
 #include <array>
 #include <shlobj.h>
 #include <limits>
+#include <numeric>
 
 #include "F4SE/PluginAPI.h"
 #include "f4se_common/f4se_version.h"
